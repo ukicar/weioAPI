@@ -2,6 +2,10 @@ import re
 import urllib
 
 import ping, socket
+
+from subprocess import check_output
+
+interface = "wlan0"
  
 def listAvailableWifiSpots() :
     """List available wifi spots will return list of wifi objects."""
@@ -16,8 +20,20 @@ def createAP(ssid, password) :
     print("not yet implemented")
 
 def isConnected() :
-    """Is connected checks if WEIO is connected to the wifi"""
-    print("not yet implemented")
+    """Is connected checks if WEIO is connected to the wifi. Function returns : 1 - connected, 0 - not connected"""
+    try :
+       output = check_output(["iwinfo", interface, "assoclist"])
+       #print output
+       if "No station connected" in output :
+           return 0
+           #print "wifi is UP but not connected"
+       else :
+           return 1
+           print "wifi is UP and connected!"
+    except :
+        return 0
+        #print "wifi is DOWN"
+    
 
 def myIp() :
     """My Ip returns current ip address of WEIO device on wlan01 interface"""
